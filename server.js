@@ -18,9 +18,18 @@ app.use((error, _req, res, _next) => {
   res.status(500).json({ message: 'Something went wrong. Please try again.' });
 });
 
-Promise.all([connectRedis(), connectMongo()])
-  .then(() => app.listen(port, () => console.log(`Server running at http://localhost:${port}`)))
+Promise.allSettled([connectRedis(), connectMongo()])
+  .then((results) => {
+    const failures = results.filter((result) => result.status === 'rejected');
+    if (failures.length > 0) {
+      const message = failures[0].reason?.message || 'Database connection failed';
+      console.error('Unable to connect to required databases:', message);
+      process.exit(1);
+    }
+
+    app.listen(port, () => console.log(`Server running at http://localhost:${port}`));
+  })
   .catch((error) => {
-    console.error('Unable to connect to required databases:', error.message);
+    console.error('Database startup failed:', error.message);
     process.exit(1);
   });
