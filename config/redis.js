@@ -18,11 +18,22 @@ redisClient.on('error', (error) => {
   console.error('Redis error:', error.message);
 });
 
+function isRedisConfigured() {
+  return Boolean(process.env.REDIS_URL || process.env.REDIS_HOST || process.env.REDIS_PORT);
+}
+
 async function connectRedis() {
+  if (!isRedisConfigured()) {
+    console.log('Redis not configured, skipping connection.');
+    return null;
+  }
+
   if (!redisClient.isOpen) {
     await redisClient.connect();
     console.log('Connected to Redis');
   }
+
+  return redisClient;
 }
 
-module.exports = { redisClient, connectRedis };
+module.exports = { redisClient, connectRedis, isRedisConfigured };
