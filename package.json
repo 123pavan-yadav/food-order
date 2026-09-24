@@ -1,0 +1,21 @@
+{
+  "name": "food-ordering-management-system",
+  "version": "1.0.0",
+  "description": "Food Ordering Management System using Redis",
+  "main": "server.js",
+  "scripts": {
+    "verify:files": "node -e \"const fs=require('fs');const files=['server.js','routes/foodRoutes.js','controllers/foodController.js','config/redis.js','config/mongo.js'];const missing=files.filter(f=>!fs.existsSync(f));if(missing.length){console.error('Missing required files: '+missing.join(', '));process.exit(1)}console.log('Project files verified.')\"",
+    "prestart": "npm run verify:files",
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongodb": "^6.9.0",
+    "redis": "^4.7.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}

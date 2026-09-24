@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: food-ordering-management-system
+    runtime: node
+    buildCommand: npm install && npm run verify:files
+    startCommand: npm start
+    envVars:
+      - key: REDIS_URL
+        sync: false
